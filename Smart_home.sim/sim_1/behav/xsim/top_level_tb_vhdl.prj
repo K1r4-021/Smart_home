@@ -1,0 +1,9 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"C:/Users/jaina/Downloads/kcpsm3.vhd" \
+"C:/Users/jaina/Downloads/smart_home.vhd" \
+"C:/Users/jaina/Downloads/top_level.vhd" \
+"C:/Users/jaina/Downloads/top_level_tb.vhd" \
+
+# Do not sort compile order
+nosort
