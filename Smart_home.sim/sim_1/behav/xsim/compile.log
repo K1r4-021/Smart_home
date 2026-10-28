@@ -1,0 +1,6 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sources_1/imports/Downloads/smart_home.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'smart_home'
+INFO: [VRFC 10-163] Analyzing VHDL file "E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sources_1/imports/Downloads/top_level.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'top_level'
+INFO: [VRFC 10-163] Analyzing VHDL file "E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'top_level_tb'

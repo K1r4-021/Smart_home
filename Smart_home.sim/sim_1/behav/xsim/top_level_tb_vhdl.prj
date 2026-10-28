@@ -1,9 +1,9 @@
 # compile vhdl design source files
 vhdl xil_defaultlib  \
-"C:/Users/jaina/Downloads/kcpsm3.vhd" \
-"C:/Users/jaina/Downloads/smart_home.vhd" \
-"C:/Users/jaina/Downloads/top_level.vhd" \
-"C:/Users/jaina/Downloads/top_level_tb.vhd" \
+"../../../../Smart_home.srcs/sources_1/imports/Downloads/kcpsm3.vhd" \
+"../../../../Smart_home.srcs/sources_1/imports/Downloads/smart_home.vhd" \
+"../../../../Smart_home.srcs/sources_1/imports/Downloads/top_level.vhd" \
+"../../../../Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd" \
 
 # Do not sort compile order
 nosort

@@ -1,84 +1,120 @@
 ; ============================================================
 ; smart_home_controller.psm
 ; PicoBlaze KCPSM3 Smart Home Controller
-; Target: Spartan-3 FPGA, 100 MHz
-; 
+; FPGA: Spartan-3E Starter Kit
+; Clock: 50 MHz
+;
+; CONTROL MODE - INPUT PORT 00
+;   00 = Reset (handled by top_level.vhd)
+;   01 = Normal
+;   10 = Away
+;   11 = Night
+;
 ; INPUT PORTS
-; 00: control_mode
-; 00 = Reset (CPU held in reset by top_level.vhd)
-; 01 = Normal
-; 10 = Away
-; 11 = Night
-; 
-; 01: Sensors
-; bit0 = person
-; bit1 = door_request
-; bit2 = door_forced
-; bit3 = smoke
-; bit4 = emergency_button
-; 
-; 02:_entered[3:0]
-; 03: temperature[7:0] in degrees Celsius
-; 04: 10 ms timer tick
-; 
+;   00 = control_mode[1:0]
+;   01 = Sensors
+;        bit0 = person
+;        bit1 = door_request
+;        bit2 = door_forced
+;        bit3 = smoke
+;        bit4 = emergency_button
+;   02 = password_entered[3:0]
+;   03 = temperature[7:0], degrees Celsius
+;   04 = 10 ms timer tick
+;
 ; OUTPUT PORT 10h
-; bits 1:0 = fan_mode
-; bit2     = light_on
-; bit3     = door_open / unlock command
-; bit4     = door_locked
-; bit5     = alarm
-; bit6     = secure_home (1 in Away mode)
-; bit7     = lockout_active
-; 
-; Password = decimal 10 (binary 1010)
-; Unlock duration = 5 seconds
-; Lockout duration = 30 seconds
-; Light off delay = 10 seconds
-; 
+;   bits 1:0 = fan_mode
+;        00 = OFF
+;        01 = LOW
+;        10 = MEDIUM
+;        11 = HIGH
+;   bit2 = light_on
+;   bit3 = door_open / unlock command
+;   bit4 = door_locked
+;   bit5 = alarm
+;   bit6 = unused (secure_home is handled by VHDL)
+;   bit7 = lockout_active
+;
+; PASSWORD = PASSWORD_VALUE
+; Door unlock = 5 seconds
+; Light timeout = 10 seconds
+; Lockout = 30 seconds
+;
 ; No door_contact input is used.
-; Door automatically relocks when unlock timer expires.
+; Door relocks automatically after its unlock timer expires.
+; Alarm remains latched until hardware reset.
 ; ============================================================
 
-                    VHDL      "ROM_form.vhd", "smart_home.vhd""smart_home"
+VHDL "ROM_form.vhd", "smart_home.vhd" "smart_home"
 
-PORT_MODE           EQU        0
-PORT_SENSOR         EQU        1
-PORT_PASSWORD       EQU        2
-PORT_TEMP           EQU        3
-PORT_TICK           EQU        4
-PORT_OUTPUT         EQU        22
+; ------------------------------------------------------------
+; PORT DEFINITIONS
+; ------------------------------------------------------------
 
-work                EQU        s0
-sensors             EQU        s1
-password            EQU        s2
-temp                EQU        s3
-tick                EQU        s4
-tick_prev           EQU        s5
-outputs             EQU        s6
-mode                EQU        s7
-light_lo            EQU        s8
-light_hi            EQU        s9
-door_lo             EQU        sA
-door_hi             EQU        sB
-lock_lo             EQU        sC
-lock_hi             EQU        sD
-failures            EQU        sE
-flags               EQU        sF
-pass                EQU        10
+PORT_MODE           EQU       0
+PORT_SENSOR         EQU       1
+PORT_PASSWORD       EQU       2
+PORT_TEMP           EQU       3
+PORT_TICK           EQU       4
+PORT_OUTPUT         EQU       16
+
+; ------------------------------------------------------------
+; PASSWORD CONSTANT
+; Decimal 10 = binary 1010 = hexadecimal 0A
+; Change this value to change the programmed password.
+; ------------------------------------------------------------
+
+PASSWORD_VALUE      EQU       10
+
+; ------------------------------------------------------------
+; REGISTER ALLOCATION
+; ------------------------------------------------------------
+
+work                EQU       s0
+sensors             EQU       s1
+password            EQU       s2
+temp                EQU       s3
+tick                EQU       s4
+tick_prev           EQU       s5
+outputs             EQU       s6
+mode                EQU       s7
+light_lo            EQU       s8
+light_hi            EQU       s9
+door_lo             EQU       sA
+door_hi             EQU       sB
+lock_lo             EQU       sC
+lock_hi             EQU       sD
+failures            EQU       sE
+flags               EQU       sF
 
 ; flags bit0 = previous door_request state
-; flags bit1 = unused
+;
+; Internal mode encoding:
+;   mode = 0: Normal
+;   mode = 1: Night
+;   mode = 2: Away
+;
+; Timer constants:
+;   1000 ticks = 10 seconds = 03E8h
+;    500 ticks =  5 seconds = 01F4h
+;   3000 ticks = 30 seconds = 0BB8h
 
                     ORG       0
 
-start: 
-                    LOAD      outputs, 22
+; ============================================================
+; INITIALIZATION
+; ============================================================
+
+start:
+                    LOAD      outputs, 16
                     LOAD      mode, 0
 
                     LOAD      light_lo, 0
                     LOAD      light_hi, 0
+
                     LOAD      door_lo, 0
                     LOAD      door_hi, 0
+
                     LOAD      lock_lo, 0
                     LOAD      lock_hi, 0
 
@@ -92,7 +128,7 @@ start:
 ; MAIN LOOP
 ; ============================================================
 
-main: 
+main:
                     IN        work, PORT_MODE
                     IN        sensors, PORT_SENSOR
                     IN        password, PORT_PASSWORD
@@ -101,8 +137,7 @@ main:
 
 ; ------------------------------------------------------------
 ; MODE SELECTION
-; Internal mode:
-; 0 = Normal, 1 = Night, 2 = Away
+; Input: 01 = Normal, 10 = Away, 11 = Night
 ; ------------------------------------------------------------
 
                     COMP      work, 2
@@ -114,71 +149,63 @@ main:
                     COMP      work, 1
                     JUMP      Z, select_normal
 
+; Default fallback: Normal mode.
                     LOAD      mode, 0
                     JUMP      mode_selected
 
-select_normal: 
+select_normal:
                     LOAD      mode, 0
                     JUMP      mode_selected
 
-select_night: 
+select_night:
                     LOAD      mode, 1
                     JUMP      mode_selected
 
-select_away: 
+select_away:
                     LOAD      mode, 2
 
-mode_selected: 
+mode_selected:
 
 ; ------------------------------------------------------------
-; SECURE HOME STATUS
-; Output bit6 = 1 only in Away mode.
-; ------------------------------------------------------------
-
-                    COMP      mode, 2
-                    JUMP      NZ, secure_home_off
-
-                    OR        outputs, $64
-                    JUMP      secure_home_done
-
-secure_home_off: 
-                    AND       outputs, $BF
-
-secure_home_done: 
-
-; ------------------------------------------------------------
-; FORCED ENTRY ALARM - sensor bit2
+; FORCED ENTRY ALARM
+; Sensor bit2 = door_forced
 ; ------------------------------------------------------------
 
                     TEST      sensors, 4
                     JUMP      Z, no_forced_alarm
-                    OR        outputs, 50
 
-no_forced_alarm: 
+                    OR        outputs, 32
+
+no_forced_alarm:
 
 ; ------------------------------------------------------------
-; SMOKE ALARM - sensor bit3
+; SMOKE ALARM IN ALL MODES
+; Sensor bit3 = smoke
 ; ------------------------------------------------------------
 
                     TEST      sensors, 8
                     JUMP      Z, no_smoke_alarm
-                    OR        outputs, 50
 
-no_smoke_alarm: 
+                    OR        outputs, 32
+
+no_smoke_alarm:
 
 ; ------------------------------------------------------------
-; EMERGENCY BUTTON - sensor bit4
-; Activates the alarm output.
+; EMERGENCY BUTTON
+; Sensor bit4 = emergency_button
+; Activates the shared alarm output.
 ; ------------------------------------------------------------
 
-                    TEST      sensors, 22
+                    TEST      sensors, 16
                     JUMP      Z, no_emergency_alarm
-                    OR        outputs, 50
 
-no_emergency_alarm: 
+                    OR        outputs, 32
+
+no_emergency_alarm:
 
 ; ------------------------------------------------------------
-; AWAY-MODE PERSON DETECTION - sensor bit0
+; AWAY-MODE PERSON DETECTION
+; Sensor bit0 = person
 ; ------------------------------------------------------------
 
                     COMP      mode, 2
@@ -186,16 +213,16 @@ no_emergency_alarm:
 
                     TEST      sensors, 1
                     JUMP      Z, not_away_person
-                    OR        outputs, 50
 
-not_away_person: 
+                    OR        outputs, 32
+
+not_away_person:
 
 ; ------------------------------------------------------------
 ; TIMER TICK EDGE DETECTION
-; One decrement per rising edge of the 10 ms tick.
+; Decrement timers once on each rising edge.
 ; ------------------------------------------------------------
 
-                    AND       tick, 1
                     TEST      tick, 1
                     JUMP      Z, tick_low
 
@@ -206,15 +233,19 @@ not_away_person:
                     CALL      decrement_timers
                     JUMP      tick_processed
 
-tick_low: 
+tick_low:
                     AND       tick_prev, $FE
 
-tick_processed: 
+tick_processed:
 
 ; ------------------------------------------------------------
-; LIGHTING
-; Normal mode: person turns light ON and reloads 10 seconds.
-; Night and Away: light forced OFF.
+; AUTOMATIC LIGHTING
+; Normal mode:
+;   Person detected: light ON, reload 10-second timer.
+;   No person: light turns OFF when timer reaches zero.
+;
+; Night and Away modes:
+;   Light OFF.
 ; ------------------------------------------------------------
 
                     COMP      mode, 0
@@ -224,11 +255,14 @@ tick_processed:
                     JUMP      Z, no_person_light
 
                     OR        outputs, 4
+
+; 1000 ticks = 10 seconds.
                     LOAD      light_lo, $E8
                     LOAD      light_hi, 3
+
                     JUMP      light_done
 
-no_person_light: 
+no_person_light:
                     LOAD      work, light_lo
                     OR        work, light_hi
                     JUMP      NZ, light_done
@@ -236,20 +270,21 @@ no_person_light:
                     AND       outputs, $FB
                     JUMP      light_done
 
-lights_not_normal: 
+lights_not_normal:
                     AND       outputs, $FB
                     LOAD      light_lo, 0
                     LOAD      light_hi, 0
 
-light_done: 
+light_done:
 
 ; ------------------------------------------------------------
 ; FAN CONTROL
-; Away = OFF
-; <=20 C = OFF
-; 21-24 C = LOW
-; 25-34 C = MEDIUM
-; >=35 C = HIGH
+; Away mode forces fan OFF.
+;
+; <=20 C       = OFF
+; 21-24 C      = LOW
+; 25-34 C      = MEDIUM
+; >=35 C       = HIGH
 ; ------------------------------------------------------------
 
                     AND       outputs, $FC
@@ -257,35 +292,38 @@ light_done:
                     COMP      mode, 2
                     JUMP      Z, fan_done
 
-                    COMP      temp, 32
+; Temperature <= 20 C: OFF.
+                    COMP      temp, 20
                     JUMP      C, fan_off
                     JUMP      Z, fan_off
 
-                    COMP      temp, 37
+; Temperature < 25 C: LOW.
+                    COMP      temp, 25
                     JUMP      C, fan_low
 
-                    COMP      temp, 53
+; Temperature < 35 C: MEDIUM.
+                    COMP      temp, 35
                     JUMP      C, fan_medium
 
+; Temperature >= 35 C: HIGH.
                     OR        outputs, 3
                     JUMP      fan_done
 
-fan_off: 
+fan_off:
                     JUMP      fan_done
 
-fan_low: 
+fan_low:
                     OR        outputs, 1
                     JUMP      fan_done
 
-fan_medium: 
+fan_medium:
                     OR        outputs, 2
 
-fan_done: 
+fan_done:
 
 ; ------------------------------------------------------------
 ; DOOR REQUEST RISING EDGE
-; sensor bit1 = door_request
-; Password = decimal 10 = hexadecimal 0A
+; Sensor bit1 = door_request
 ; ------------------------------------------------------------
 
                     TEST      sensors, 2
@@ -296,56 +334,71 @@ fan_done:
 
                     OR        flags, 1
 
-; Reject requests during lockout.
+; Reject password attempts during lockout.
                     TEST      outputs, $80
                     JUMP      NZ, request_edge_done
 
-                    COMP      password, pass
+; Compare entered password with the constant.
+                    COMP      password, PASSWORD_VALUE
                     JUMP      Z, password_ok
 
 ; Incorrect password.
                     ADD       failures, 1
+
                     COMP      failures, 3
                     JUMP      C, request_edge_done
                     JUMP      Z, start_lockout
+
                     JUMP      request_edge_done
 
-start_lockout: 
+; ------------------------------------------------------------
+; START 30-SECOND LOCKOUT
+; ------------------------------------------------------------
+
+start_lockout:
                     OR        outputs, $80
 
 ; 3000 ticks = 30 seconds = 0BB8h.
                     LOAD      lock_lo, $B8
-                    LOAD      lock_hi, 17
+                    LOAD      lock_hi, 11
+
                     LOAD      failures, 0
 
-; Lock door and cancel any unlock.
+; Ensure the door is locked.
                     AND       outputs, $F7
-                    OR        outputs, 22
+                    OR        outputs, 16
+
                     LOAD      door_lo, 0
                     LOAD      door_hi, 0
+
                     JUMP      request_edge_done
 
-password_ok: 
+; ------------------------------------------------------------
+; CORRECT PASSWORD
+; ------------------------------------------------------------
+
+password_ok:
                     LOAD      failures, 0
 
-; Unlock door and clear locked output.
+; Unlock the door and clear the locked output.
                     OR        outputs, 8
                     AND       outputs, $EF
 
 ; 500 ticks = 5 seconds = 01F4h.
                     LOAD      door_lo, $F4
                     LOAD      door_hi, 1
+
                     JUMP      request_edge_done
 
-request_low: 
+request_low:
                     AND       flags, $FE
 
-request_edge_done: 
+request_edge_done:
 
 ; ------------------------------------------------------------
-; DOOR AUTO-RELOCK
-; No physical door-contact sensor.
-; Relock when the 5-second timer expires.
+; AUTOMATIC DOOR RELOCK
+; No door_contact input is available.
+; Relock when the unlock timer reaches zero.
 ; ------------------------------------------------------------
 
                     TEST      outputs, 8
@@ -357,19 +410,28 @@ request_edge_done:
 
                     CALL      relock_door
 
-door_timeout_done: 
+door_timeout_done:
+
+; ------------------------------------------------------------
+; WRITE OUTPUTS
+; Bit6 is deliberately unused by the PSM.
+; secure_home is driven directly by top_level.vhd.
+; ------------------------------------------------------------
 
                     OUT       outputs, PORT_OUTPUT
                     JUMP      main
 
 ; ============================================================
 ; DECREMENT TIMERS
-; Called once per 10 ms tick rising edge.
+; Called once per 10 ms timer-tick rising edge.
 ; ============================================================
 
-decrement_timers: 
+decrement_timers:
 
-; Light countdown.
+; ------------------------------------------------------------
+; LIGHT COUNTDOWN
+; ------------------------------------------------------------
+
                     LOAD      work, light_lo
                     OR        work, light_hi
                     JUMP      Z, dec_door_timer
@@ -378,9 +440,12 @@ decrement_timers:
                     JUMP      NC, dec_door_timer
                     SUB       light_hi, 1
 
-dec_door_timer: 
+dec_door_timer:
 
-; Door unlock countdown.
+; ------------------------------------------------------------
+; DOOR UNLOCK COUNTDOWN
+; ------------------------------------------------------------
+
                     LOAD      work, door_lo
                     OR        work, door_hi
                     JUMP      Z, dec_lock_timer
@@ -389,9 +454,13 @@ dec_door_timer:
                     JUMP      NC, dec_lock_timer
                     SUB       door_hi, 1
 
-dec_lock_timer: 
+dec_lock_timer:
 
-; Lockout countdown.
+; ------------------------------------------------------------
+; LOCKOUT COUNTDOWN
+; Only count while lockout_active is set.
+; ------------------------------------------------------------
+
                     TEST      outputs, $80
                     JUMP      Z, timers_return
 
@@ -407,22 +476,23 @@ dec_lock_timer:
                     OR        work, lock_hi
                     JUMP      NZ, timers_return
 
-lockout_expired: 
+lockout_expired:
                     AND       outputs, $7F
                     LOAD      failures, 0
 
-timers_return: 
-                    RET       
+timers_return:
+                    RET
 
 ; ============================================================
 ; RELOCK DOOR
+; Clear unlock command, set door_locked, clear door timer.
 ; ============================================================
 
-relock_door: 
+relock_door:
                     AND       outputs, $F7
-                    OR        outputs, 22
+                    OR        outputs, 16
 
                     LOAD      door_lo, 0
                     LOAD      door_hi, 0
 
-                    RET       
+                    RET

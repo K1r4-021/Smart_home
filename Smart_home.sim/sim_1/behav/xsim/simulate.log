@@ -1,60 +1,36 @@
 Time resolution is 1 ps
 Note: TEST 1: Reset mode
-Time: 0 ps  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 0 ps  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 2: Normal mode
-Time: 100 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 100 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 3: Away mode secure_home status
-Time: 200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Error: FAIL: secure_home should be 1 in Away mode
-Time: 300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 4: Person detected in Away mode
-Time: 300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Person detection in Away mode should activate alarm
-Time: 400 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Error: FAIL: secure_home should remain 1 in Away mode
-Time: 400 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 400 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 5: Night mode
-Time: 500 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Fan should be MEDIUM at 25 C in Night mode
-Time: 600 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 500 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 6: Fan threshold tests
-Time: 600 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Fan should be LOW at 21 C
-Time: 800 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Fan should be MEDIUM at 25 C
-Time: 900 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Fan should be HIGH at 35 C
-Time: 1 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 600 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 7: Normal mode lighting
-Time: 1 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Person detection should turn light ON
-Time: 1100 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Light should remain ON before timeout
-Time: 1200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 1 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 8: Smoke alarm
-Time: 1200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Smoke should activate alarm
-Time: 1300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 1200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 9: Forced-entry alarm
-Time: 1400 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Forced entry should activate alarm
-Time: 1500 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 1400 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 10: Emergency button activates alarm
-Time: 1600 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 1600 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 11: Correct door password
-Time: 1800 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Correct password should unlock door
-Time: 2 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Door should be unlocked after correct password
-Time: 2 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 1800 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 12: Reset locks door
-Time: 2100 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 2100 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 13: Password lockout
-Time: 2200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-Error: FAIL: Lockout should activate after three attempts
-Time: 2800 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 2200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 14: Reset clears lockout
-Time: 2900 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
+Time: 2900 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: All testbench checks completed.
-Time: 3 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: C:/Users/jaina/Downloads/top_level_tb.vhd
-$stop called at time : 3 ms : File "C:/Users/jaina/Downloads/top_level_tb.vhd" Line 450
+Time: 3 ms  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
+$stop called at time : 3 ms : File "E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd" Line 450
