@@ -76,8 +76,8 @@ Compiling architecture lut4_v of entity unisim.LUT4 [\LUT4(init="010000000000000
 Compiling architecture lut4_v of entity unisim.LUT4 [\LUT4(init="0000000100000000")(0...]
 Compiling architecture low_level_definition of entity xil_defaultlib.kcpsm3 [kcpsm3_default]
 Compiling architecture rb18_internal_vhdl_v of entity unisim.RB18_INTERNAL_VHDL [\RB18_INTERNAL_VHDL(bram_size=18...]
-Compiling architecture ramb18e1_v of entity unisim.RAMB18E1 [\RAMB18E1(initp_00="011101110000...]
-Compiling architecture ramb16_s18_v of entity unisim.RAMB16_S18 [\RAMB16_S18(initp_00="0111011100...]
+Compiling architecture ramb18e1_v of entity unisim.RAMB18E1 [\RAMB18E1(initp_00="110000111011...]
+Compiling architecture ramb16_s18_v of entity unisim.RAMB16_S18 [\RAMB16_S18(initp_00="1100001110...]
 Compiling architecture low_level_definition of entity xil_defaultlib.smart_home [smart_home_default]
 Compiling architecture rtl of entity xil_defaultlib.top_level [top_level_default]
 Compiling architecture simulation of entity xil_defaultlib.top_level_tb

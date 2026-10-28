@@ -5,12 +5,8 @@ Note: TEST 2: Normal mode
 Time: 100 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 3: Away mode secure_home status
 Time: 200 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
-Error: FAIL: secure_home should be 1 in Away mode
-Time: 300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 4: Person detected in Away mode
 Time: 300 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
-Error: FAIL: secure_home should remain 1 in Away mode
-Time: 400 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 5: Night mode
 Time: 500 us  Iteration: 0  Process: /top_level_tb/stimulus_process  File: E:/EE sem 7/EEL-682/Smart_home/Smart_home.srcs/sim_1/imports/Downloads/top_level_tb.vhd
 Note: TEST 6: Fan threshold tests

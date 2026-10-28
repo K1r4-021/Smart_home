@@ -155,14 +155,17 @@ main:
 
 select_normal:
                     LOAD      mode, 0
+                    AND       outputs, $BF
                     JUMP      mode_selected
 
 select_night:
                     LOAD      mode, 1
+                    AND       outputs, $BF
                     JUMP      mode_selected
 
 select_away:
                     LOAD      mode, 2
+                    OR 		  outputs, 64
 
 mode_selected:
 
